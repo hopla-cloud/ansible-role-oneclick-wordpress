@@ -1,0 +1,192 @@
+---
+# tasks file for hoplacloud.wordpress
+
+- name: Ensure root password is allowed in SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#PermitRootLogin'
+    line: "PermitRootLogin yes"
+
+- name: restart service ssh
+  systemd:
+    state: restarted
+    name: ssh
+
+- name: Init vars
+  set_fact:
+    wp_password: "{{ lookup('password', '/dev/null length=8 chars=ascii_letters,digits,hexdigits') }}"
+    db_password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters,digits,hexdigits') }}"
+    vhost_user: "{{ vhost_url | regex_replace('\\.') | truncate(13, True, '') }}"
+    vhost_password: "{{ lookup('password', '/dev/null length=12 chars=ascii_letters,digits,hexdigits') }}"
+    vhost_domain: "{{ vhost_url | regex_replace('([^\\.]*)\\.(.+)$', '\\2') }}"
+    vhost_sdomain: "{{ vhost_url | regex_replace('([^\\.]*)\\.(.+)$', '\\1') }}"
+
+- name: Set vhost_path
+  set_fact:
+    vhost_path: "/var/www/custs/{{ vhost_domain }}/{{ vhost_sdomain }}"
+    vhost_conf_file: "{{ vhost_domain }}_{{ vhost_sdomain }}"
+
+- name: Creating websites directory
+  file:
+    path: "{{ vhost_path }}"
+    state: directory
+
+- name: Add vhost user
+  user:
+    name: "{{ vhost_user }}"
+    comment: "User for {{ vhost_url }}"
+    password: "{{ vhost_password | password_hash('sha512') }}"
+    home: "{{ vhost_path }}"
+
+- name: Create mysql database
+  mysql_db:
+    name: "{{ vhost_user }}"
+    state: present
+
+- name: Create mysql user
+  mysql_user:
+    state: present
+    name: "{{ vhost_user }}"
+    password: "{{ db_password }}"
+    login_host: localhost
+    priv: '{{ vhost_user }}.*:ALL,GRANT'
+
+- name: Download wp-cli
+  get_url:
+    url: "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+    dest: "/usr/local/bin/wp"
+    mode: "755"
+
+- name: Copy vhost config
+  copy:
+    src: "files/vhost.conf"
+    dest: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+
+- name: Update Apache vhost [1/5]
+  replace:
+    path: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_path'
+    replace: '{{ vhost_path }}'
+
+- name: Update Apache vhost [2/5]
+  replace:
+    path: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_url'
+    replace: '{{ vhost_url }}'
+
+- name: Update Apache vhost [3/5]
+  replace:
+    path: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+    regexp: 'php_version'
+    replace: '{{ php_version }}'
+
+- name: Update Apache vhost [4/5]
+  replace:
+    path: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+    regexp: 'user_email'
+    replace: '{{ user_email }}'
+
+- name: Update Apache vhost [5/5]
+  replace:
+    path: "/etc/apache2/sites-available/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_conf_file'
+    replace: '{{ vhost_conf_file }}'
+
+- name: Enable wordpress vhost
+  command: "a2ensite {{ vhost_conf_file }}.conf"
+
+- name: Copy FPM config
+  copy:
+    src: "files/fpm.conf"
+    dest: "/etc/php/{{ php_version }}/fpm/pool.d/{{ vhost_conf_file }}.conf"
+
+- name: Update FPM vhost [1/4]
+  replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_user'
+    replace: '{{ vhost_user }}'
+
+- name: Update FPM vhost [2/4]
+  replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_url'
+    replace: '{{ vhost_url }}'
+
+- name: Update FPM vhost [3/4]
+  replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/{{ vhost_conf_file }}.conf"
+    regexp: 'php_version'
+    replace: '{{ php_version }}'
+
+- name: Update FPM vhost [4/4]
+  replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/{{ vhost_conf_file }}.conf"
+    regexp: 'vhost_conf_file'
+    replace: '{{ vhost_conf_file }}'
+
+- name: restart apache
+  service: name=apache2 state=restarted
+
+- name: Download wordpress core
+  command: "wp core download --path={{ vhost_path }} --version={{ wp_version }} --locale=fr_FR --force --allow-root"
+
+- name: Copy sample config file
+  copy:
+    remote_src: yes
+    src: "{{ vhost_path }}/wp-config-sample.php"
+    dest: "{{ vhost_path }}/wp-config.php"
+
+- name: Update WordPress config file
+  lineinfile:
+    dest: "{{ vhost_path }}/wp-config.php"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - {'regexp': "^define\\( 'DB_NAME'*", 'line': "define('DB_NAME', '{{ vhost_user }}');"}
+    - {'regexp': "^define\\( 'DB_USER'*", 'line': "define('DB_USER', '{{ vhost_user }}');"}
+    - {'regexp': "^define\\( 'DB_PASSWORD'*", 'line': "define('DB_PASSWORD', '{{ db_password }}');"}
+
+- name: Install wordpress core
+  command: "wp core install --path={{ vhost_path }} --title='Your hopla.cloud Wordpress'  --url={{ vhost_url }} --admin_user=admin --admin_password={{ wp_password }} --admin_email={{ user_email }} --allow-root --skip-email"
+
+- name: Log variables to file
+  template:
+    src: logs.j2
+    dest: /root/Oneclick-wp-{{ ansible_date_time.date }}-{{ ansible_date_time.time }}.txt
+    owner: root
+    group: root
+
+- name: Display root password in case of mail delivery failure
+  debug:
+    msg: root password is {{ root_password }}
+
+- name: Sending end of provisionning Email to user
+  mail:
+    host: localhost
+    port: 25
+    to: "{{ user_email }}"
+    subject: "hopla.cloud : 👏 Votre {{ app_name }} vous attend !"
+    subtype: "html"
+    secure: "never"
+    body: '
+    <p>
+    {{ app_name }}<br>
+    http://{{ vhost_url }} <br>
+    Utilisateur: admin <br>
+    Mot de passe: {{ wp_password }} <br>
+    Acces admin : http://{{ vhost_url }}/wp-admin/ <br>
+    </p>
+    <p>
+    FTP <br>
+    ftp://{{ vhost_url }} <br>
+    Utilisateur: {{ vhost_user }} <br>
+    Mot de passe: {{ vhost_password }} <br>
+    </p>
+    <p>
+    SSH <br>
+    IPv4: {{ ansible_default_ipv4.address }}<br>
+    IPv6: {{ ansible_default_ipv6.address }}<br>
+    Utilisateur: root<br>
+    Mot de passe: {{ root_password }} <br>
+    </p>
+    '
