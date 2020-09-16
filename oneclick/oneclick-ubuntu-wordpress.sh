@@ -19,8 +19,7 @@ export HOME=/root
 currdate=$(date +%F)
 
 # Install ansible
-# For ubuntu 18.04
-DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:ansible/ansible
+
 apt update
 DEBIAN_FRONTEND=noninteractive apt install ansible -y --allow-yes true
 
@@ -31,4 +30,4 @@ ansible-galaxy install hoplacloud.wordpress
 echo "- hoplacloud.wordpress (${currdate})" >> /etc/hopla.cloud-roles
 
 # Install oneclick app
-ansible-playbook /root/.ansible/roles/hoplacloud.wordpress/playbooks/vhostdeploy_wordpress.yml --extra-vars "$1"
+ansible-playbook /root/.ansible/roles/hoplacloud.wordpress/playbooks/oneclick_docker_wordpress.yml --extra-vars "$1"
