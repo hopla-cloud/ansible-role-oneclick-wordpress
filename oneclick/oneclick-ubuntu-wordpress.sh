@@ -24,7 +24,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install ansible -y --allow-yes true
 
 # Install hoplacloud roles
-ansible-galaxy install hoplacloud.wordpress
+ansible-galaxy install hoplacloud.oneclick_wordpress
 
 # Write roles
 echo "- hoplacloud.wordpress (${currdate})" >> /etc/hopla.cloud-roles
