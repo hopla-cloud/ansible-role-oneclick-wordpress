@@ -87,6 +87,11 @@
     vhost_path: "/var/www/custs/{{ vhost_domain }}/{{ vhost_sdomain }}"
     vhost_conf_file: "{{ vhost_domain }}_{{ vhost_sdomain }}"
 
+- name: Run docker compose
+  docker_compose:
+    project_name: wordpress
+    project_src: /root/compose/wordpress
+
 - name: Log variables to file
   template:
     src: logs.j2
