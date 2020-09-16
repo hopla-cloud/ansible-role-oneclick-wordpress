@@ -1,0 +1,96 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb
+    volumes:
+      - /var/container/wordpress/data/mysql:/var/lib/mysql
+      - /var/container/wordpress/log/mysql:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: {{ db_root_password }}
+      MYSQL_DATABASE: {{ vhost_user }}
+      MYSQL_USER: {{ vhost_user }}
+      MYSQL_PASSWORD: {{ db_password }}
+    restart: always
+    networks:
+      - backend
+
+  wordpress:
+    image: wordpress:php7.3-fpm-alpine
+    volumes:
+      - /var/container/wordpress/data/html:/var/www/html
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: {{ vhost_user }}
+      WORDPRESS_DB_USER: {{ vhost_user }}
+      WORDPRESS_DB_PASSWORD: {{ db_password }}
+      WORDPRESS_TABLE_PREFIX: wp_
+    networks:
+      - backend
+    restart: always
+
+  wordpress-cli:
+    depends_on:
+      - mysql
+      - wordpress
+    image: wordpress:cli
+    user: xfs
+    command: >
+      /bin/sh -c '
+      sleep 10;
+      wp core install --path="/var/www/html" --url="http://{{ vhost_url }}" --title="Your hopla.cloud Wordpress" --admin_user=admin --admin_password={{ wp_password }} --admin_email={{ user_email }}
+      '
+    volumes:
+      - /var/container/wordpress/data/html:/var/www/html
+    networks:
+      - backend
+
+  apache:
+    build: './apache2/'
+    volumes:
+      - /var/container/wordpress/etc/apache2/conf/php-fpm.conf:/usr/local/apache2/conf/php-fpm.conf
+      - /var/container/wordpress/data/html:/var/www/html
+      - /var/container/wordpress/log/apache2/:/var/log/apache2/
+    depends_on:
+      - mysql
+      - wordpress
+    networks:
+      - backend
+      - traefik
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wp.rule=Host(`{{ vhost_url }}`)"
+      #- "traefik.http.routers.wp.entrypoints=websecure"
+
+  ftp:
+    image: fauria/vsftpd
+    ports:
+      - 20:20
+    volumes:
+      - /var/container/wordpress/data/html:/home/vsftpd/{{ vhost_user }}
+    environment:
+      - FTP_USER={{ vhost_user }}
+      - FTP_PASS={{ vhost_password }}
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+    restart: always
+
+  proxy:
+    image: traefik:latest
+#    command: --web --docker --docker.domain=YOURDOMAIN.local --logLevel=DEBUG
+    networks:
+      - traefik
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/container/wordpress/etc/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - /var/container/wordpress/etc/traefik/acme.json:/etc/traefik/acme.json
+
+networks:
+  traefik:
+  backend:

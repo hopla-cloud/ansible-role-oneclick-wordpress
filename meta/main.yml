@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: wordpress
+  role_name: oneclick_wordpress
   author: Joffrey Skandera
   description: Hopla.cloud role for ansible to install wordpress
   company: hopla.cloud
@@ -11,10 +11,11 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - bionic
-        - xenial
+        - focal
+
   galaxy_tags:
     - web
+    - docker
     - wordpress
     - php
     - fpm
@@ -23,8 +24,6 @@ dependencies:
     - hoplacloud.linux_update
     - hoplacloud.linux_motd
     - hoplacloud.linuxbase
-    - hoplacloud.apache_php
     - hoplacloud.fail2ban
-    - hoplacloud.proftpd
     - hoplacloud.postfix
-    - geerlingguy.mysql
+    - hoplacloud.docker

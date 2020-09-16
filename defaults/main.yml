@@ -1,4 +1,4 @@
 ---
-# defaults file for hoplacloud.wordpress
+# defaults file for hoplacloud.oneclick_wordpress
 #WordPress version
 wp_version: "5.4.2"

@@ -1,4 +1,4 @@
 ---
-# handlers file for hoplacloud.wordpress
+# handlers file for hoplacloud.oneclick_wordpress
 - name: restart apache
   service: name=apache2 state=restarted
