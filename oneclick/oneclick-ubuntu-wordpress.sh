@@ -30,4 +30,4 @@ ansible-galaxy install hoplacloud.oneclick_wordpress
 echo "- hoplacloud.wordpress (${currdate})" >> /etc/hopla.cloud-roles
 
 # Install oneclick app
-ansible-playbook /root/.ansible/roles/hoplacloud.wordpress/playbooks/oneclick_docker_wordpress.yml --extra-vars "$1"
+ansible-playbook /root/.ansible/roles/hoplacloud.oneclick_wordpress/playbooks/oneclick_docker_wordpress.yml --extra-vars "$1"
