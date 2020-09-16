@@ -65,7 +65,7 @@
 - name: Copy Dockerfile for apache2
   copy:
     src: Dockerfile_apache2.yml
-    dest: /root/compose/wordpress/apache2/Dockerfile.yml
+    dest: /root/compose/wordpress/apache2/Dockerfile
 
 - name: Create docker-compose file
   template:

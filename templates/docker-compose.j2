@@ -62,7 +62,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wp.rule=Host(`{{ vhost_url }}`)"
-      #- "traefik.http.routers.wp.entrypoints=websecure"
+      - "traefik.http.routers.wp.entrypoints=websecure"
 
   ftp:
     image: fauria/vsftpd
@@ -79,7 +79,6 @@ services:
 
   proxy:
     image: traefik:latest
-#    command: --web --docker --docker.domain=YOURDOMAIN.local --logLevel=DEBUG
     networks:
       - traefik
     ports:
