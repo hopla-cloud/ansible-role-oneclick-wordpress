@@ -62,7 +62,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wp.rule=Host(`{{ vhost_url }}`)"
       - "traefik.http.routers.wp.entrypoints=websecure"
-      - "traefik.network=traefik"
+      - "traefik.docker.network=wordpress_traefik"
 
   ftp:
     image: fauria/vsftpd
