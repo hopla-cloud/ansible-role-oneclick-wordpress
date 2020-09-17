@@ -12,6 +12,10 @@ services:
     restart: always
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   wordpress:
     image: wordpress:php7.3-fpm-alpine
@@ -31,8 +35,8 @@ services:
 
   wordpress-cli:
     depends_on:
-      - mysql
-      - wordpress
+      mysql:
+        condition: service_healthy
     image: wordpress:cli
     user: xfs
     command: >
