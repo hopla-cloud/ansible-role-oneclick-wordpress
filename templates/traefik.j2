@@ -21,12 +21,11 @@
   [providers.docker]
     watch = true
     exposedByDefault = false
-    network = "traefik"
 
 [certificatesResolvers]
   [certificatesResolvers.default]
     [certificatesResolvers.default.acme]
       email = "{{ user_email }}"
-      storage = "acme.json"
+      storage = "/etc/traefik/acme.json"
       caServer = "https://acme-v01.api.letsencrypt.org/directory"
     [certificatesResolvers.default.acme.tlsChallenge]

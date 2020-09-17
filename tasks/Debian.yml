@@ -82,10 +82,21 @@
     src: traefik.j2
     dest: /var/container/wordpress/etc/traefik/traefik.toml
 
-- name: Set vhost_path
-  set_fact:
-    vhost_path: "/var/www/custs/{{ vhost_domain }}/{{ vhost_sdomain }}"
-    vhost_conf_file: "{{ vhost_domain }}_{{ vhost_sdomain }}"
+- name: Create traefik acme file
+  file:
+    path: /var/container/wordpress/etc/traefik/acme.json
+    state: touch
+    mode: '600'
+
+- name: Create ftp log directory
+  file:
+    path: /var/container/wordpress/log/vsftpd
+    state: directory
+
+- name: Create ftp logs file
+  file:
+    path: /var/container/wordpress/log/vsftpd/vsftpd.log
+    state: touch
 
 - name: Run docker compose
   docker_compose:

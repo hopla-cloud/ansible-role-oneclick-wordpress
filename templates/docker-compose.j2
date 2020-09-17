@@ -4,7 +4,6 @@ services:
     image: mariadb
     volumes:
       - /var/container/wordpress/data/mysql:/var/lib/mysql
-      - /var/container/wordpress/log/mysql:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: {{ db_root_password }}
       MYSQL_DATABASE: {{ vhost_user }}
@@ -73,7 +72,7 @@ services:
       - "21100-21110:21100-21110"
     volumes:
       - /var/container/wordpress/data/html:/home/vsftpd/{{ vhost_user }}
-      - /var/container/wordpress/log/vsftpd:/var/log/vsftpd/vsftpd.log
+      - /var/container/wordpress/log/vsftpd/vsftpd.log:/var/log/vsftpd.log
     environment:
       - FTP_USER={{ vhost_user }}
       - FTP_PASS={{ vhost_password }}
