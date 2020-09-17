@@ -37,7 +37,7 @@ services:
     user: xfs
     command: >
       /bin/sh -c '
-      sleep 10;
+      sleep 60;
       wp core install --path="/var/www/html" --url="http://{{ vhost_url }}" --title="Your hopla.cloud Wordpress" --admin_user=admin --admin_password={{ wp_password }} --admin_email={{ user_email }}
       '
     volumes:
