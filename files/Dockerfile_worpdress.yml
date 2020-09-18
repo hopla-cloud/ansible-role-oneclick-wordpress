@@ -1,0 +1,3 @@
+FROM wordpress:php7.3-fpm-alpine
+ADD host-init.sh /host-init.sh
+RUN chmod +x /host-init.sh

@@ -67,6 +67,21 @@
     src: Dockerfile_apache2.yml
     dest: /root/compose/wordpress/apache2/Dockerfile
 
+- name: Create container directory
+  file:
+    path: /var/container/wordpress/etc/wordpress
+    state: directory
+
+- name: Copy Dockerfile for apache2
+  copy:
+    src: Dockerfile_wordpress.yml
+    dest: /root/compose/wordpress/wordpress/Dockerfile
+
+- name: Copy Dockerfile for apache2
+  copy:
+    src: wordpress/host-init.sh
+    dest: /root/compose/wordpress/wordpress/host-init.sh
+
 - name: Create docker-compose file
   template:
     src: docker-compose.j2

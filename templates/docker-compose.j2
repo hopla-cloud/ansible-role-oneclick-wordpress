@@ -14,7 +14,7 @@ services:
       - backend
 
   wordpress:
-    image: wordpress:php7.3-fpm-alpine
+    build: './wordpress/'
     volumes:
       - /var/container/wordpress/data/html:/var/www/html
     depends_on:
@@ -28,6 +28,10 @@ services:
     networks:
       - backend
     restart: always
+    command: /bin/sh -c '
+      /host-init.sh;
+      /usr/local/bin/docker-entrypoint.sh php-fpm
+      '
 
   wordpress-cli:
     depends_on:
