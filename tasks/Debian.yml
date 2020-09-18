@@ -82,10 +82,10 @@
     src: Dockerfile_wordpress.yml
     dest: /root/compose/wordpress/wordpress/Dockerfile
 
-- name: Copy Dockerfile for apache2
+- name: Copy script for wordpress
   copy:
-    src: wordpress/host-init.sh
-    dest: /root/compose/wordpress/wordpress/host-init.sh
+    src: wordpress/host-int.sh
+    dest: /root/compose/wordpress/wordpress/host-int.sh
 
 - name: Create docker-compose file
   template:

@@ -29,7 +29,7 @@ services:
       - backend
     restart: always
     command: /bin/sh -c '
-      /host-init.sh;
+      /host-int.sh;
       /usr/local/bin/docker-entrypoint.sh php-fpm
       '
 
