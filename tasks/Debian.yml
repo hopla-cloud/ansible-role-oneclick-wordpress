@@ -32,6 +32,11 @@
     path: /root/compose/wordpress/apache2
     state: directory
 
+- name: Create compose wordpress directory
+  file:
+    path: /root/compose/wordpress/wordpress
+    state: directory
+
 - name: Create container directory
   file:
     path: /var/container
@@ -72,7 +77,7 @@
     path: /var/container/wordpress/etc/wordpress
     state: directory
 
-- name: Copy Dockerfile for apache2
+- name: Copy Dockerfile for wordpress
   copy:
     src: Dockerfile_wordpress.yml
     dest: /root/compose/wordpress/wordpress/Dockerfile
