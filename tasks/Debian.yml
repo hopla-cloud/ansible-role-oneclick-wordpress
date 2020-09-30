@@ -77,6 +77,11 @@
     path: /var/container/wordpress/etc/wordpress
     state: directory
 
+- name: Create container directory
+  file:
+    path: /var/container/wordpress/etc/php
+    state: directory
+
 - name: Copy Dockerfile for wordpress
   copy:
     src: Dockerfile_wordpress.yml
@@ -101,6 +106,11 @@
   template:
     src: traefik.j2
     dest: /var/container/wordpress/etc/traefik/traefik.toml
+
+- name: Create php config file
+  template:
+    src: php.ini.j2
+    dest: /var/container/wordpress/etc/php/php.ini
 
 - name: Create traefik acme file
   file:
