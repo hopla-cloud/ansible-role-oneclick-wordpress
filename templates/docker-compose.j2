@@ -17,7 +17,7 @@ services:
     build: './wordpress/'
     volumes:
       - /var/container/wordpress/data/html:/var/www/html
-      - /var/container/wordpress/etc/php/php.ini:/usr/local/etc/php-fpm.conf
+      - /var/container/wordpress/etc/php/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - mysql
     environment:
