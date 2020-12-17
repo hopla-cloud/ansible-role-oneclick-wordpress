@@ -170,26 +170,26 @@
 <div style="color: #ffffff; font-family: 'Open Sans', Helvetica, Arial, sans-serif; line-height: 1.5; padding: 10px 30px 10px 30px;">
 <div style="font-size: 14px; line-height: 1.5; font-family: 'Open Sans', Helvetica, Arial, sans-serif; color: #ffffff; mso-line-height-alt: 21px;">
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Vous pouvez accéder à votre {{ app_name }} depuis l'adresse :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 24px; margin: 0;"><a style="color: #ffffff">http://{{ vhost_url }}</a></p>
+<p style="font-size: 18px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;"><a style="color: #ffffff;" href="http://{{ vhost_url }}">http://{{ vhost_url }}</a></p>
 <br />
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Pour accéder aux pages d'administration, rendez-vous sur :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 24px; margin: 0;"><a style="color: #ffffff">http://{{ vhost_url }}/wp-admin/</a></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;"><a style="color: #ffffff;" href="http://{{ vhost_url }}/wp-admin/">http://{{ vhost_url }}/wp-admin/</a></p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Votre compte d'administration est :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur: <b>admin</<b></p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe: <<b>{{ wp_password }}</<b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur : <b>admin</<b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe : <b>{{ wp_password }}</<b></p>
 <br />
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Une connexion FTP est aussi disponible à l'adresse :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;"><a style="color: #ffffff">ftp://{{ vhost_url }}</a></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;"><a style="color: #ffffff;" href="ftp://{{ vhost_url }}">ftp://{{ vhost_url }}</a></p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Avec les informations d'identification suivantes :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur: <b>{{ vhost_user }}</b></p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe: <b>{{ vhost_password }}</b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur : <b>{{ vhost_user }}</b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe : <b>{{ vhost_password }}</b></p>
 <br />
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Pour administrer votre système {{ ansible_distribution }}, vous pouvez vous connecter en SSH à l'adresse :</p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">IPv4: {{ ansible_default_ipv4.address }}</p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">IPv6: {{ ansible_default_ipv6.address }}</p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Avec les informations d'identification suivantes :</p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur: <b>root</b></p>
-<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe: <b>{{ root_password }}</b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Utilisateur : <b>root</b></p>
+<p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Mot de passe : <b>{{ root_password }}</b></p>
 <br />
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">Retrouvez &eacute;galement notre guide de d&eacute;marrage rapide directement sur <a style="color: #ffffff;" href="https://wiki.hopla.cloud/wiki/S%27inscrire_et_d%C3%A9marrer_rapidement_une_instance_sur_hopla.cloud">https://wiki.hopla.cloud</a></p>
 <p style="font-size: 14px; line-height: 1.5; text-align: center; mso-line-height-alt: 21px; margin: 0;">&nbsp;</p>
