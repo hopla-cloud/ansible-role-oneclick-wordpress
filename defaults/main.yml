@@ -1,5 +1,6 @@
 ---
 # defaults file for hoplacloud.oneclick_wordpress
+app_name: WordPress
 #WordPress version
 wp_version: "5.5.1"
 post_max_size: "64M"
