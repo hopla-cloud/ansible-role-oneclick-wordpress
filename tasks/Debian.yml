@@ -133,6 +133,22 @@
     project_name: wordpress
     project_src: /root/compose/wordpress
 
+- name: Create domain_test.sh
+  template:
+    src: domain_test.j2
+    dest: /root/domain_test.sh
+
+- name: Touch domain.invalid file
+  file:
+    path: /etc/domain.invalid
+    state: touch
+
+- name: Ensure a cron task exist
+  cron:
+    name: "DNS TEST"
+    minute: "*/5"
+    job: "test -a /etc/domain.invalid && /root/domain_test.sh > /dev/null"
+
 - name: Log variables to file
   template:
     src: logs.j2

@@ -1,0 +1,7 @@
+#!/bin/bash
+IP=$(ip addr show | grep "inet " | grep -v "127.0.0.1/8\|172.*\|192.168.*" | awk '{print $2}' | awk -F "/" '{print $1}')
+DIG=$(dig {{ vhost_url }} -4 +short)
+if [ "$IP" == "$DIG" ]; then
+	docker restart wordpress_proxy_1
+	rm /etc/domain.invalid
+fi

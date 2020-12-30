@@ -3,6 +3,3 @@
 - name: Display root password in case of mail delivery failure
   debug:
     msg: root password is {{ root_password }}
-
-- name: restart apache
-  service: name=apache2 state=restarted
